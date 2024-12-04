@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.GameVerse.model.CategoriaModel;
 import com.example.GameVerse.model.GamesModel;
 import com.example.GameVerse.repository.CategoriaRepository;
 import com.example.GameVerse.repository.GamesRepository;
@@ -47,17 +48,11 @@ public class GamesController {
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 	
-	@GetMapping("/categoria/{nome}")
-    public ResponseEntity <List<GamesModel>> getGamesByCategoria(@PathVariable String categoria) {
-        List<GamesModel> jogos = gamesRepository.findAllByCategoriaContainingIgnoreCase(categoria);
-        
-        if (jogos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        
-        return ResponseEntity.ok(jogos);
-    }
-
+	@GetMapping("/jogos/{nome}")
+    public ResponseEntity<List<GamesModel>> getByNome(@PathVariable String nome){
+        return ResponseEntity.ok(gamesRepository.findAllByNomeContainingIgnoreCase(nome));
+	}
+	
 	@PostMapping
 	public ResponseEntity<GamesModel> post(@Valid @RequestBody GamesModel gamesModel){
 		if (categoriaRepository.existsById(gamesModel.getCategoria().getId()))
